@@ -11,6 +11,7 @@ export class ResetEmail extends Component {
     headerStyle: {
       elevation: 0,
       shadowOpacity: 0, 
+      backgroundColor:'#F5FCFF'
     },
     headerTitleStyle: {
       fontFamily:'Montserrat SemiBold',
@@ -126,6 +127,7 @@ export class ResetPassword extends Component {
     headerStyle: {
       elevation: 0,
       shadowOpacity: 0, 
+      backgroundColor:'#F5FCFF'
     },
     headerTitleStyle: {
       fontFamily:'Montserrat SemiBold',

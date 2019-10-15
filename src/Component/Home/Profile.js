@@ -19,14 +19,14 @@ class Profile extends React.Component {
           return (
            // <Image source={activeIcon} style={styles.tabBarIcon} ImageResizeMode='cover'/>
             <View style={styles.avatar_tabbar_active}>
-              <Text style={styles.avatar_text_tabbar_active}>{global.userdata.fname.toUpperCase().charAt(0)+global.userdata.sname.toUpperCase().charAt(0)}</Text>
+              <Text style={styles.avatar_text_tabbar_active}>{global.userdata.fname.toUpperCase().charAt(0)+global.userdata.lname.toUpperCase().charAt(0)}</Text>
             </View>
             );
         else
           return(
             // <Image source={inactiveIcon} style={styles.tabBarIcon} ImageResizeMode='cover' />
             <View style={styles.avatar_tabbar_inactive}>
-              <Text style={styles.avatar_text_tabbar_inactive}>{global.userdata.fname.toUpperCase().charAt(0)+global.userdata.sname.toUpperCase().charAt(0)}</Text>
+              <Text style={styles.avatar_text_tabbar_inactive}>{global.userdata.fname.toUpperCase().charAt(0)+global.userdata.lname.toUpperCase().charAt(0)}</Text>
             </View>
             );        
       },
@@ -70,21 +70,21 @@ class Profile extends React.Component {
           <View style={styles.header}>
               <View style={{position: 'absolute', top: '100%', left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
                 <View style={styles.avatar}>
-                  <Text style={styles.avatar_text}>{global.userdata.fname.toUpperCase().charAt(0)+global.userdata.sname.toUpperCase().charAt(0)}</Text>
+                  <Text style={styles.avatar_text}>{global.userdata.fname.toUpperCase().charAt(0)+global.userdata.lname.toUpperCase().charAt(0)}</Text>
                 </View>
              </View>
           </View>
           <View style={styles.content}>
              <View style={styles.nameArea}>
-               <Text style={styles.name}>{global.userdata.fname+" "+global.userdata.sname}</Text>
-               <Text style={styles.job}>{global.userdata.job.toUpperCase()}</Text>
+               <Text style={styles.name}>{global.userdata.fname+" "+global.userdata.lname}</Text>
+               <Text style={styles.job}>{global.userdata.role.toUpperCase()}</Text>
              </View>
              <View style={[styles.editArea,]}>
                 <View style={[styles.SectionStyle, {marginTop:3,}]}>
                   <Text style={{paddingLeft:20, fontSize:12, color:'#000', fontFamily:'Montserrat SemiBold',}}>{global.languages.profile_company}</Text>
                   <TextInput editable={false}
                       style={styles.inputAgency}
-                      placeholder={global.userdata.company} placeholderTextColor={'rgba(0,0,0,0.5)'}
+                      placeholder={global.userdata.user_company} placeholderTextColor={'rgba(0,0,0,0.5)'}
                   />
                 </View>
                 <View style={[styles.SectionStyle, {marginTop:35,}]}>

@@ -20,9 +20,6 @@ function getLocalPath (url) {
   return `${RNFS.DocumentDirectoryPath}/${filename}`;
 }
 
-const url = 'http://10.0.2.2/api_test/';
-
-
 class IdeaStage extends React.Component {
 
   constructor(props) {

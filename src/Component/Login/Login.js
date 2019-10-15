@@ -4,7 +4,7 @@ import Toast from 'react-native-root-toast'
 import styles from './Login.styles'
 import arrow_image from '../../assets/images/intro/arrow.png'
 import NavigationService from '../../../NavigationService';
-import axios from '../Axios';
+import axios,{convertParam} from '../Axios';
 
 
 export class LoginEmail extends Component {
@@ -13,6 +13,7 @@ export class LoginEmail extends Component {
     headerStyle: {
       elevation: 0,
       shadowOpacity: 0, 
+      backgroundColor:'#F5FCFF'
     },
     headerTitleStyle: {
       fontFamily:'Montserrat SemiBold',
@@ -73,7 +74,7 @@ onContinue = () =>
       <StatusBar backgroundColor="rgba(255,255,255,0)" barStyle="dark-content" />
         <View style={styles.mainArea}>
           <View style={{flex:2, width:'100%', alignItems:'center'}}>
-          <TextInput style={styles.emailInput} placeholder={global.languages.login_email_placeholder}
+          <TextInput style={styles.emailInput} placeholder={global.languages.login_email_placeholder} value="d@e.f"
           placeholderTextColor="grey" textContentType="none" autoFocus={true}  ref={(c)=>this._email=c}/>
           <TouchableHighlight  style={styles.button} underlayColor={'#197ed1'} onPress={this.onContinue}>
               <View style={styles.image_button}>
@@ -124,6 +125,7 @@ export class LoginPassword extends Component {
     headerStyle: {
       elevation: 0,
       shadowOpacity: 0, 
+      backgroundColor:'#F5FCFF'
     },
     headerTitleStyle: {
       fontFamily:'Montserrat SemiBold',
@@ -156,49 +158,53 @@ onContinue = () =>
   const { navigation } = this.props;
   const email = navigation.getParam('email', "");
   const password= this._password._lastNativeText;
- //   this.setState({validated:this.state.validated, password:this.state.password, loading:true})
- //   axios.post('login.php', {
-  //      email: email,
-   //     password: this.state.password
-  //  })
- //   .then(function (response) {
-      let res={"result":"success","user":{"id":"1","email":"kostya1207@hotmail.com","fname":"Aero","sname":"Juujarvi","job":"UI Designer","company":"IT Company"}};
-      if(res.result=='success')
+   this.setState({loading:true})
+   axios.get(convertParam('login',{
+     email:email,
+     password:password
+   }))
+   .then(function (response) {
+       let res={"result":"success","user":{"id":"1","email":"kostya1207@hotmail.com","fname":"Aero","sname":"Juujarvi","job":"UI Designer","company":"IT Company"}};
+      console.log(response);
+      res=response.data;
+      if(res.state=='success')
       {
-        let userdata=res.user;
+        let userdata=res.user[0];
         
         global.userdata = userdata;
+        global._token = res._token;
 
         NavigationService.navigate('Home')
       }
-      // else
-      // {
-      //   Toast.show('Login Failed. Try again.', {
-      //     duration:Toast.durations.LONG,
-      //     position:Toast.positions.TOP,
-      //     shadow: true,
-      //     animation: true,
-      //     hideOnPress: true,
-      //     delay: 0,
-      //     onHidden: () => {
-      //       NavigationService.navigate('LoginEmail')
-      //     }
-      //   });
-    //   }
-    // })
-    // .catch(function (error) {
-    //   Toast.show('Login Failed. Can\'t connect Server.\nTry again.', {
-    //     duration:Toast.durations.LONG,
-    //     position:Toast.positions.TOP,
-    //     shadow: true,
-    //     animation: true,
-    //     hideOnPress: true,
-    //     delay: 0,
-    //     onHidden: () => {
-    //       NavigationService.navigate('LoginEmail')
-    //     }
-    //   });
-    // });
+      else
+      {
+        Toast.show('Login Failed. Try again.', {
+          duration:Toast.durations.LONG,
+          position:Toast.positions.TOP,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          onHidden: () => {
+            NavigationService.navigate('LoginEmail')
+          }
+        });
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+      Toast.show('Login Failed. Can\'t connect Server.\nTry again.', {
+        duration:Toast.durations.LONG,
+        position:Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+        onHidden: () => {
+          NavigationService.navigate('LoginEmail')
+        }
+      });
+    });
 }
 
   render () {
@@ -222,7 +228,7 @@ onContinue = () =>
           <View style={{flex:2, width:'100%', alignItems:'center'}}>
           <TextInput style={styles.emailInput} placeholder={global.languages.login_password_placeholder}
            secureTextEntry={true}  ref={(c)=>this._password=c}
-            placeholderTextColor="grey" autoFocus={true} 
+            placeholderTextColor="grey" autoFocus={true}  value="1"
             textContentType="none"  />
           <TouchableHighlight  style={styles.button} underlayColor={'#197ed1'} onPress={this.onContinue}>
             <View style={styles.image_button}>

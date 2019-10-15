@@ -3,7 +3,7 @@ import { Text, View , Image, ScrollView, ActivityIndicator, TouchableOpacity,Sta
 import { withNavigation } from 'react-navigation';
 import NavigationService from '../../../NavigationService';
 import { BackHandler } from 'react-native';
-import axios from '../Axios';
+import axios,{convertParam} from '../Axios';
 import Toast from 'react-native-root-toast';
 
 import {styles, styles1} from './HomeScreen.styles';
@@ -108,46 +108,48 @@ class HomeScreen extends React.Component {
 
 
     componentDidMount(){
-      this.setState({
-               loading: false,dataSource:project_data.data});
-    //   axios.post('get_projects.php', {
-    //     email: global.userdata.email
-    //   })
-    //   .then(response => {
-    //   let res=response.data;
-    //   if(res.result=='success')
-    //   {
-    //     this.setState({
-    //       loading: false,
-    //       dataSource: res.data,
-    //      });
-    //   }
-    //   else
-    //   {
-    //     Toast.show('Can\'t get Data from server. Try again.', {
-    //       position:Toast.positions.CENTER,
-    //       shadow: true,
-    //       animation: true,
-    //       hideOnPress: true,
-    //       delay: 0,
-    //       onHidden: () => {
-    //        BackHandler.exitApp();
-    //       }
-    //     });
-    //   }
-    // })
-    // .catch(function (error) {
-    //   Toast.show('Can\'t connect to server.', {
-    //     position:Toast.positions.TOP,
-    //     shadow: true,
-    //     animation: true,
-    //     hideOnPress: true,
-    //     delay: 0,
-    //     onHidden: () => {
-    //       BackHandler.exitApp();
-    //     }
-    //   });
-    // });
+    //  this.setState({loading: false,dataSource:project_data.data});
+      axios.get(convertParam('project/list',{
+        userid:global.userdata.id,
+        _token:global.userdata._token
+      }))
+      .then(response => {
+      let res=response.data;
+        console.log(res);
+      if(res.state=='success')
+      {
+        this.setState({
+          loading: false,
+          dataSource: res.data,
+         });
+      }
+      else
+      {
+        Toast.show('Can\'t get Data from server. Try again.', {
+          position:Toast.positions.CENTER,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          onHidden: () => {
+           BackHandler.exitApp();
+          }
+        });
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+      Toast.show('Can\'t connect to server.', {
+        position:Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+        onHidden: () => {
+          BackHandler.exitApp();
+        }
+      });
+    });
 
     }
     
@@ -159,11 +161,11 @@ class HomeScreen extends React.Component {
         <View style={styles.header}>
           <TouchableOpacity style={{flex:1, flexDirection:'row', justifyContent:'center', alignContent:'center', alignItems:'center'}} onPress={()=>{this.props.navigation.navigate('Profile');}}>
             <View style={styles.avatar}>
-              <Text style={styles.avatar_text}>{global.userdata.fname.toUpperCase().charAt(0)+global.userdata.sname.toUpperCase().charAt(0)}</Text>
+              <Text style={styles.avatar_text}>{global.userdata.fname.toUpperCase().charAt(0)+global.userdata.lname.toUpperCase().charAt(0)}</Text>
             </View>
             <View style={{flexDirection:'column', marginLeft:5}}>
-               <Text style={styles.job}>{global.userdata.job.toUpperCase()}</Text>
-               <Text style={styles.company}>{global.userdata.company}</Text>
+               <Text style={styles.job}>{global.userdata.role.toUpperCase()}</Text>
+               <Text style={styles.company}>{global.userdata.user_company}</Text>
             </View>
           </TouchableOpacity>
           <View style={{flex:2, justifyContent: 'center', alignItems: 'center',}}>
@@ -182,7 +184,7 @@ class HomeScreen extends React.Component {
             <ScrollView style={{width:'100%', height:'100%',paddingTop:1,}}> 
               {
                 this.state.dataSource.map((item) => {
-                  if(item.completed==0)
+                  if(item.completed!=0)
                     return (
                       <CustomRow ongotoIdeaView={()=>{this.gotoIdeaView(item)}} 
                       ongotoImproveIdeaView={this.ongotoImproveIdeaView} 
